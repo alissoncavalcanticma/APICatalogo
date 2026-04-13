@@ -18,7 +18,7 @@ namespace APICatalogo.Controllers
 
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get() {
-            var categorias = _context.Categorias.ToList();
+            var categorias = _context.Categorias.AsNoTracking().ToList();
             if (categorias is null) return NotFound("Categorias não encontradas...");
             return Ok(categorias);
         }
@@ -33,7 +33,7 @@ namespace APICatalogo.Controllers
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id) {
-            var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
             if (categoria is null) return NotFound("Categoria não encontrada...");
 
             return Ok(categoria);
@@ -64,7 +64,7 @@ namespace APICatalogo.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult<Categoria> Delete(int id) {
 
-            var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
 
             if (categoria is null) return NotFound("Categoria não encontrada!");
 
