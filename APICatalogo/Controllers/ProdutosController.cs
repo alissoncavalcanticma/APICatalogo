@@ -22,9 +22,10 @@ namespace APICatalogo.Controllers
             return $"Nome é {nome} e valor é {valor}";
         }
 
+        //Usando async await
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get() {
-            var produtos = _context.Produtos.AsNoTracking().ToList();
+        public async Task<ActionResult<IEnumerable<Produto>>> Get() {
+            var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
             if (produtos is null) return NotFound("Produtos não encontrados...");
             return produtos;
         }
