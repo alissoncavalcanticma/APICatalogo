@@ -41,7 +41,7 @@ namespace APICatalogo.Controllers
             return Ok(categorias);
         }
 
-        [HttpGet("{id:int}", Name = "ObterCategoria")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id) {
             var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
             if (categoria is null) return NotFound("Categoria não encontrada...");

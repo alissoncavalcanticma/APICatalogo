@@ -15,6 +15,13 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
+        [HttpGet("/testeRestricoes/{nome:length(3)}/{valor:decimal:range(2,5)}")] //Só aceita 3 caracteres
+        public ActionResult<String> Get(string nome, decimal valor) {
+            if (nome is null) return BadRequest("Nome é nulo");
+
+            return $"Nome é {nome} e valor é {valor}";
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Produto>> Get() {
             var produtos = _context.Produtos.AsNoTracking().ToList();
@@ -22,7 +29,7 @@ namespace APICatalogo.Controllers
             return produtos;
         }
 
-        [HttpGet("{id:int}", Name="ObterProduto")]
+        [HttpGet("{id:int:min(1)}", Name="ObterProduto")]
         public ActionResult<Produto> Get(int id) {
             var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
             if (produto is null) return NotFound("Produto não encontrado...");
