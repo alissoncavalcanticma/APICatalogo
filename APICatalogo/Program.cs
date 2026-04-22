@@ -1,4 +1,5 @@
 using APICatalogo.Context;
+using APICatalogo.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -19,9 +20,14 @@ builder.Services.AddOpenApi();
 //Include ConnectionString
 string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
+//Obtendo valores de variáveis appsettings
+var user2 = builder.Configuration["infos:nome"] + " " + builder.Configuration["infos:sobrenome"];
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection))
 );
+
+builder.Services.AddTransient<IMeuServico, MeuServico > ();
 
 
 var app = builder.Build();
