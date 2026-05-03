@@ -10,10 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ApiExceptionFilter));
+}).AddJsonOptions(
     options => options
-                    .JsonSerializerOptions
-                        .ReferenceHandler = ReferenceHandler.IgnoreCycles    
+           .JsonSerializerOptions
+           .ReferenceHandler = ReferenceHandler.IgnoreCycles    
 );
 
 

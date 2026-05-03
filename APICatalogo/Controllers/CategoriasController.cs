@@ -43,7 +43,6 @@ namespace APICatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get() {
 
-            try {
                 var categorias = _context.Categorias.AsNoTracking().ToList();
                 if (categorias is null) return NotFound("Categorias não encontradas...");
 
@@ -51,10 +50,6 @@ namespace APICatalogo.Controllers
 
                 //Testando lançamento de exceção
                 //throw new DataMisalignedException();
-            }
-            catch {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro não esperado...");
-            }
         }
 
         [HttpGet("produtos")]
