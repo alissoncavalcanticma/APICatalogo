@@ -1,4 +1,5 @@
 ﻿using APICatalogo.Context;
+using APICatalogo.Filters;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,30 @@ namespace APICatalogo.Controllers
     {
         public readonly AppDbContext _context;
         public readonly IConfiguration _configuration;
+        public readonly ILogger _logger;
 
-        public CategoriasController(AppDbContext context, IConfiguration configuration) {
+        public CategoriasController(AppDbContext context, IConfiguration configuration, ILogger<CategoriasController> logger) {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpGet("getconfiguration")]
         public ActionResult<String> GetValorConfiguration() {
+
+            _logger.LogInformation("============ Call getconfiguration LOG =============");
+            //throw new Exception("Exceção teste no retorno.");
+            
             var user = _configuration["infos:nome"] + " " + _configuration["infos:sobrenome"];
             return $"Bem vindo {user}";
+        }
+
+        [HttpGet("filters")]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
+        public ActionResult<String> GetFilters()
+        {
+            
+            return "Teste filters";
         }
 
 
@@ -71,6 +86,7 @@ namespace APICatalogo.Controllers
 
         [HttpPut("{id:int}")]
         public ActionResult<Categoria> Put(int id, Categoria categoria) {
+
             if (id != categoria.CategoriaId) return BadRequest("CategoriaId não correspondente!");
 
             _context.Entry(categoria).State = EntityState.Modified;
