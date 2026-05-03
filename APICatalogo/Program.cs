@@ -1,4 +1,7 @@
 using APICatalogo.Context;
+using APICatalogo.Extensions;
+using APICatalogo.Filters;
+using APICatalogo.Logging;
 using APICatalogo.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -27,7 +30,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection))
 );
 
-builder.Services.AddTransient<IMeuServico, MeuServico > ();
+builder.Services.AddTransient<IMeuServico, MeuServico>();
+//Add Filter de Logging
+builder.Services.AddScoped<ApiLoggingFilter>();
+
+//Add logging provider
+builder.Logging.AddProvider(new CustomLoggerProvider(
+    new CustomLoggerProviderConfiguration 
+    { 
+        LogLevel = LogLevel.Information 
+    }));
 
 
 var app = builder.Build();
@@ -37,6 +49,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+    app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
